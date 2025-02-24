@@ -1,0 +1,16 @@
+FROM python:3.12-slim
+
+WORKDIR /usr/app
+
+RUN pip install dbt-core dbt-postgres
+
+COPY ./webshop .
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    DBT_PROFILES_DIR=.
+
+ENTRYPOINT ["bash"]
+
+# docker run -it --network airflow_default dbt-custom-runner
+# dbt run --target staging

@@ -1,0 +1,53 @@
+
+cd simulator 
+docker build -t webshop:latest .
+
+cd airflow
+docker build -t airflow:latest .
+docker compose up
+
+add sva file to config folder
+
+airflow connections add 'my_postgres_connection' --conn-type 'postgres' --conn-host 'postgres-data' --conn-schema 'simulator' --conn-login 'admin' --conn-password 'admin' --conn-port 5432
+airflow connections add 'google_cloud_default' --conn-type 'google_cloud_platform' --conn-extra '{"key_path": "./config/gcp-sva-file.json"}'
+
+
+- create a service account and download the json key locally
+- add the admin storage role in IAM panel to the service account
+
+airflow connections add 'google_cloud_default' --conn-type 'google_cloud_platform' -.... some stuff with json here
+
+
+
+export GOOGLE_APPLICATION_CREDENTIALS=/opt/config/gcp-sva-file.json
+
+
+Cold run vs Hot run with the docker containers
+> many warm containers or few (cost vs speed)
+
+> run dbt models using in airflow in a docker container 
+  -> docker creates a container and runs a dbt model in it
+  -> Can we have a set of docker containers available to us,
+  that we can use to run the models of them (docker execute) aka a warm start 
+
+> Get the network name of the docker containers / docker compose
+docker inspect postgres-data -f "{{json .NetworkSettings.Networks }}"
+
+> Get all the volumes of the docker container
+
+docker inspect -f '{{ .Mounts }}' efcc85dbb0fd
+
+# run container with connecting to a network
+docker run -it --network airflow_default  dbt-runner run
+
+
+# Next steps:
+> Pre run multiple containers and run different models in each of the containers 
+based on availability. Goal: Not to spend time on launching and stopping a container,
+but to just execute. 
+
+> dags creating other dags
+aka when models depend on other models
+
+
+> try astronomer-cosmos package
