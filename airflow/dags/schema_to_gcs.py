@@ -41,7 +41,7 @@ class DagTemplate:
         return dag
 
 postgres_config = {
-    "tables": ["category", "orders", "events"],
+    "tables": ["category", "orders", "event"],
     "config": {
         "postgres_conn_id": "my_postgres_connection",
         "gcs_bucket_name": "ksmi-airflow"

@@ -170,7 +170,7 @@ cython_debug/
 
 ### Python Patch ###
 # Poetry local configuration file - https://python-poetry.org/docs/configuration/#local-configuration
-poetry.toml
+poetry.toml 
 
 # ruff
 .ruff_cache/
@@ -186,3 +186,6 @@ gcp-sva-file.json
 
 webshop/
 *venv/
+
+dump_data.py
+/airflow/logs/
