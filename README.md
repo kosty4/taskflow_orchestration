@@ -7,10 +7,10 @@ The goal of this project was to learn airflow and build a simple data backup app
 
 ## 🚀 Features
 
-- ✨ Use Airflow provided PostgresToGCSOperator on a single table or set of tables to back up data to a GCS blob
-- 🔥 Created custom Operators and Hooks to learn how to inherit from Airflow provided base classes to learn more on the Airflow-provided functionality.
-- ⚡ Running DBT models using Docker In Docker
-- 🎯 Running DBT models using Docker Standalone (submit job to provisioned containers)
+- ✨ Use Airflow-provided PostgresToGCSOperator on a single table or set of tables to back up data to a GCS blob.
+- 🔥 Created custom SQL Operator and GCS Hook to learn how to build custom extracting/loading functionality, inheriting from Airflow base classes.
+- ⚡ Running DBT models using Airflow-provided DockerOperator
+- 🎯 Running DBT models using custom-made DockerExecutorOperator that submits jobs to provisioned (hot) containers.
 
 ## 📦 Installation
 

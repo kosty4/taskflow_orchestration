@@ -186,3 +186,6 @@ gcp-sva-file.json
 
 webshop/
 *venv/
+
+dump_data.py
+/airflow/logs/

@@ -86,14 +86,12 @@ x-airflow-common:
     postgres:
       condition: service_healthy
 
-# networks:
-#   airflow_network:
-#     name: airflow_network
-#     driver: bridge
+# NOTE - all services in the same docker compose are always in same 
+# network bridge.
 
 services:
 
-  # DB
+  # DB for data storage
   postgres-data:
     image: postgres:16.1
     container_name: postgres-data
@@ -110,28 +108,44 @@ services:
       retries: 5
     restart: always
 
-  # Simulator script
+  # Script to seed the DB with data
   pg-simulator:
-    image: webshop:latest
+    image: pg-simulator:latest
+    build:
+      context: ../db-data
+      dockerfile: Dockerfile
+
     container_name: pg-simulator
-    # entrypoint: ["tail", "-f", "/dev/null"]
-    # volumes:
-    #   - .:/app
-    command:
-      - simulate
     environment:
-      - TARGET_DATABASE=postgres
       - USERNAME=admin
       - PASSWORD=admin
       - HOST=postgres-data
       - DATABASE=simulator
+      - PORT=5432
     depends_on:
       postgres-data:
-        condition: service_healthy
+        condition: service_healthy 
 
-  # Airflow
+  # Simulator script
+  # pg-simulator:
+  #   image: webshop:latest
+  #   container_name: pg-simulator
+  #   # entrypoint: ["tail", "-f", "/dev/null"]
+  #   # volumes:
+  #   #   - .:/app
+  #   command:
+  #     - simulate
+  #   environment:
+  #     - TARGET_DATABASE=postgres
+  #     - USERNAME=admin
+  #     - PASSWORD=admin
+  #     - HOST=postgres-data
+  #     - DATABASE=simulator
+  #   depends_on:
+  #     postgres-data:
+  #       condition: service_healthy
 
-  # airflow state DB
+  # DB for storing Airflow state
   postgres:
     image: postgres:13
     environment:
