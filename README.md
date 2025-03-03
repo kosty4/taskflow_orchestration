@@ -12,27 +12,49 @@ The goal of this project was to learn airflow and build a simple data backup app
 - ⚡ Running DBT models using Airflow-provided DockerOperator
 - 🎯 Running DBT models using custom-made DockerExecutorOperator that submits jobs to provisioned (hot) containers.
 
+
+## 📖 Requirements
+
+- You will need to setup your GCP project and Service Account yourself.
+In short, this is how to do it:
+1. Create your Service account in GCP Console
+2. Add the admin storage role in IAM panel to the service account.
+3. Download the Service Accouint JSON file. Place it here:
+```sh
+airflow/config/gcp-sva-file.json
+```
+
 ## 📦 Installation
 
 ```sh
 # Clone the repository
-git clone https://github.com/yourusername/project-name.git
-cd project-name
+git clone https://github.com/kosty4/taskflow_orchestration.git
+cd taskflow_orchestration
 
-# Install dependencies
-npm install
+# Pull / Build images and Run the project
+docker-compose up
 
-# Run the project
-npm start
 ```
+This will build and start all the containers that are needed for this project.
+The DB will also be seeded with some toy data. 
 
-## 📖 Usage
 
-Provide examples or steps on how to use your project.
+## 🔧 Airflow Configuration
+
+- Once containers are up and running and service account file is placed, we need to add connections to airflow so they are indexed in the DAGS, allowing us read/write to Postgres and GCS
 
 ```sh
-# Example command or API request
-node app.js
+# 1. Get the ID of the Airflow Scheduler Contaniner and exec into it:
+docker ps 
+# We see 6bb6d8a90e58 runs as the scheduler
+docker exec -it 6bb6d8a90e58 /bin/bash
+
+# 2. Add Postgres connection
+airflow connections add 'my_postgres_connection' --conn-type 'postgres' --conn-host 'postgres-data' --conn-schema 'simulator' --conn-login 'admin' --conn-password 'admin' --conn-port 5432
+
+# 3. Add GCS connection 
+airflow connections add 'google_cloud_default' --conn-type 'google_cloud_platform' --conn-extra '{"key_path": "./config/gcp-sva-file.json"}'
+
 ```
 
 ## 🛠 Tech Stack
@@ -44,8 +66,7 @@ node app.js
 
 ## 🙌 Acknowledgments
 
-- Thanks to [Gary Clark and Xccelerated team for provided training](https://github.com/contributor1)
-- Inspiration from [Project X](https://github.com/projectx)
+- Thanks to [Gary Clark and Xccelerated team for provided training](https://github.com/gclarkjr5) (https://www.xccelerated.io)
 
 ---
 
