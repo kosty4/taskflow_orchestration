@@ -1,6 +1,6 @@
 # 📌 Taskflow Orchestration with Airflow
 
-![Project Banner](https://via.placeholder.com/1200x400.png?text=Project+Banner)
+![Project Banner](stack.png)
 
 > This is a project I worked on while learning about Airflow and task orchestration.
 The goal of this project was to learn airflow and build a simple data backup application.
